@@ -1,2 +1,6 @@
-langchain==0.0.331
+langchain==0.0.332
+Pillow==9.4.0
+Pillow==10.1.0
+pypdf
+Requests==2.31.0
 streamlit==1.26.0
