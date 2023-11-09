@@ -1,6 +1,8 @@
 import os
 import streamlit as st
 import tempfile
+from PIL import Image
+import requests
 # import getpass
 # import openai
 # from langchain.document_loaders import TextLoader
@@ -27,6 +29,7 @@ from langchain.callbacks.base import BaseCallbackHandler
 ### Define functions
 
 # load user document file
+@st.cache_data
 def load_document(uploaded_files):
     docs = []
     temp_dir = tempfile.TemporaryDirectory()
@@ -93,10 +96,18 @@ class PrintRetrievalHandler(BaseCallbackHandler):
             self.status.markdown(doc.page_content)
         self.status.update(state="complete")
 
+@st.cache_data
+def load_image(onlineurl):
+    image = Image.open(requests.get(onlineurl, stream=True).raw)
+    return image
+
 def main():
 
+    image = load_image('https://github.com/sl-huo/chatbot/blob/main/chatbot_doc.png?raw=true')
+    st.image(image, caption='')
+
     st.title("Q&A Chatbot 🤖")
-    st.write("This is a chatbot that uses the OpenAI API to answer questions from your document.")
+    st.write("This is a chatbot that can answer questions from your document.")
 
     # using streamlit to ask user enter the API key
     with st.sidebar:
