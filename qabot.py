@@ -41,16 +41,16 @@ def load_document(uploaded_files):
         loader = PyPDFLoader(temp_filepath)
         docs.extend(loader.load())
     
-    # split the text into sentences
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    texts = text_splitter.split_documents(docs)
-    return texts
+    return docs
 
 # define retriver function
 @st.cache_resource(ttl="1h")
 def configure_retriever(uploaded_files):
     # load text
-    texts = load_document(uploaded_files)
+    docs = load_document(uploaded_files)
+    # split the text into sentences
+    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    texts = text_splitter.split_documents(docs)
     # create embeddings and store in vectordb
     # embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     # using OpenAIEmbeddings() instead of HuggingFaceEmbeddings()
@@ -107,6 +107,7 @@ def main():
     st.image(image, caption='')
 
     st.title("Q&A Chatbot")
+    st.caption('S Huo | Canada | 2023')
     st.write("This is a chatbot that can answer questions from your document.")
 
     # using streamlit to ask user enter the API key
@@ -190,9 +191,14 @@ def main():
             # st.session_state.messages.append({"role": "assistant", "content": answer})
             # st.write(answer)
             ### use print retrieval handler
-            retrieval_handler = PrintRetrievalHandler(st.container())
+            # retrieval_handler = PrintRetrievalHandler(st.container())
             stream_handler = StreamHandler(st.empty())
-            response = qa.run(user_question, callbacks=[retrieval_handler, stream_handler])
+            response = qa.run(user_question, 
+                              callbacks=[
+                                #   retrieval_handler, 
+                                  stream_handler
+                                  ]
+                            )
             # st.write(response)
 
 if __name__ == "__main__":
