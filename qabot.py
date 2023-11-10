@@ -106,7 +106,7 @@ def main():
     image = load_image('https://github.com/sl-huo/chatbot/blob/main/chatbot_doc.png?raw=true')
     st.image(image, caption='')
 
-    st.title("Q&A Chatbot 🤖")
+    st.title("Q&A Chatbot")
     st.write("This is a chatbot that can answer questions from your document.")
 
     # using streamlit to ask user enter the API key
